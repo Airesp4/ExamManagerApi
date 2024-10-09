@@ -1,17 +1,11 @@
 package com.app.ExamManager.model;
 
 
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,12 +19,8 @@ public class Questao {
     @Column(name = "enunciado", nullable = false, length = 500)
     private String enunciado;
 
-    @ManyToOne
-    @JoinColumn(name = "prova_id", nullable = false)
-    private Prova prova;
-
-    @OneToMany(mappedBy = "questao", cascade = CascadeType.ALL)
-    private List<Resposta> opcoesResposta;
+    @Column(name = "prova_id", nullable = false)
+    private int provaId;
 
     public int getId() {
         return id;
@@ -48,19 +38,11 @@ public class Questao {
         this.enunciado = enunciado;
     }
 
-    public Prova getProva() {
-        return prova;
+    public int getProvaId() {
+        return provaId;
     }
 
-    public void setProva(Prova prova) {
-        this.prova = prova;
-    }
-
-    public List<Resposta> getOpcoesResposta() {
-        return opcoesResposta;
-    }
-
-    public void setOpcoesResposta(List<Resposta> opcoesResposta) {
-        this.opcoesResposta = opcoesResposta;
+    public void setProvaId(int provaId) {
+        this.provaId = provaId;
     }
 }

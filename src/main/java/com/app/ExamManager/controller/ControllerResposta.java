@@ -42,7 +42,7 @@ public class ControllerResposta {
         }
 
         Resposta resposta = new Resposta();
-        resposta.setQuestao(questao);
+        resposta.setQuestaoId(questaoId);
         resposta.setDescricao(descricao);
 
         resposta = serviceResposta.salvarResposta(resposta);
@@ -79,19 +79,24 @@ public class ControllerResposta {
     public ResponseEntity<Resposta> atualizarResposta(@PathVariable int id, @RequestParam String descricao){
         
         try {
-            
             Resposta resposta = serviceResposta.buscarRespostaPorId(id);
-
+    
+            if (resposta == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+    
             if (!resposta.getDescricao().equals(descricao)) {
-                
+
                 resposta.setDescricao(descricao);
 
                 serviceResposta.atualizarResposta(resposta);
-            }
+                return new ResponseEntity<>(resposta, HttpStatus.OK);
+            } else {
 
-            return new ResponseEntity<>(resposta, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            }
         } catch (IllegalArgumentException e) {
-            
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

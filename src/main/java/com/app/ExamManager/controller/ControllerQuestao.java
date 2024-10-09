@@ -1,6 +1,5 @@
 package com.app.ExamManager.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ExamManager.model.Prova;
 import com.app.ExamManager.model.Questao;
-import com.app.ExamManager.model.Resposta;
 import com.app.ExamManager.service.ServiceProva;
 import com.app.ExamManager.service.ServiceQuestao;
 
@@ -32,8 +30,7 @@ public class ControllerQuestao {
 
     @PostMapping("/cadastro/{provaId}")
     public ResponseEntity<Questao> criarQuestao(@PathVariable int provaId, 
-                                                @RequestParam String enunciado, 
-                                                @RequestParam List<String> opcoesResposta){
+                                                @RequestParam String enunciado){
 
         Prova prova = serviceProva.buscarProvaPorId(provaId);
 
@@ -42,14 +39,17 @@ public class ControllerQuestao {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (enunciado == null & enunciado.trim().isEmpty()) {
+        if (enunciado == null || enunciado.trim().isEmpty()) {
             
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         Questao questao = new Questao();
         questao.setEnunciado(enunciado);
-        
+        questao.setProvaId(provaId);
+
+        serviceQuestao.salvarQuestao(questao);
+        return new ResponseEntity<>(questao, HttpStatus.CREATED);   
     }
 
     @GetMapping("/buscar")
