@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,8 +21,9 @@ public class Questao {
     @Column(name = "enunciado", nullable = false, length = 500)
     private String enunciado;
 
-    @Column(name = "prova_id", nullable = false)
-    private int provaId;
+    @ManyToOne
+    @JoinColumn(name = "prova_id", nullable = false)
+    private Prova prova;
 
     public int getId() {
         return id;
@@ -38,11 +41,11 @@ public class Questao {
         this.enunciado = enunciado;
     }
 
-    public int getProvaId() {
-        return provaId;
+    public Prova getProva() {
+        return prova;
     }
 
-    public void setProvaId(int provaId) {
-        this.provaId = provaId;
+    public void setProva(Prova prova) {
+        this.prova = prova;
     }
 }

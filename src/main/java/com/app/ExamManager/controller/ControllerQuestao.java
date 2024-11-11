@@ -46,7 +46,7 @@ public class ControllerQuestao {
 
         Questao questao = new Questao();
         questao.setEnunciado(enunciado);
-        questao.setProvaId(provaId);
+        questao.setProva(prova);
 
         serviceQuestao.salvarQuestao(questao);
         return new ResponseEntity<>(questao, HttpStatus.CREATED);   

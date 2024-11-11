@@ -42,8 +42,8 @@ public class ControllerResposta {
         }
 
         Resposta resposta = new Resposta();
-        resposta.setQuestaoId(questaoId);
         resposta.setDescricao(descricao);
+        resposta.setQuestao(questao);
 
         resposta = serviceResposta.salvarResposta(resposta);
         return new ResponseEntity<>(resposta, HttpStatus.CREATED);
