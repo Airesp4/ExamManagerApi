@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.ExamManager.model.Prova;
 import com.app.ExamManager.service.ServiceProva;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/provas")
 public class ControllerProva {
@@ -26,6 +30,11 @@ public class ControllerProva {
     private ServiceProva serviceProva;
 
     @PostMapping("/cadastro")
+    @Operation(summary = "Cria uma nova prova", description = "Adiciona uma nova prova com o nome fornecido")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Prova criada com sucesso!"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     public ResponseEntity<Prova> criarProva(@RequestParam String nome){
 
         Prova prova = new Prova();
@@ -43,6 +52,10 @@ public class ControllerProva {
     }
 
     @GetMapping("/buscar")
+    @Operation(summary = "Listar todas provas", description = "Retorna todas as provas cadastradas")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Provas encontradas com sucesso!")
+    })
     public ResponseEntity<List<Prova>> listarProvas() {
 
         try {
@@ -58,6 +71,10 @@ public class ControllerProva {
     }
 
     @GetMapping("/buscar/{id}")
+    @Operation(summary = "Busca prova pelo identificador", description = "Retorna prova correspondente ao identificador parametrizado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!")
+    })
     public ResponseEntity<Prova> buscarProvaPorId(@PathVariable int id) {
 
         try {
@@ -74,6 +91,10 @@ public class ControllerProva {
     }
 
     @PutMapping("/atualizar/{id}")
+    @Operation(summary = "Atualiza informações de uma prova", description = "Identifica alterações em um objeto prova cadastrado e atualiza o registro")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Prova atualizada com sucesso!")
+    })
     public ResponseEntity<Prova> atualizarProva(@PathVariable int id, @RequestParam String nome) {
 
         try {
@@ -95,6 +116,10 @@ public class ControllerProva {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Deleta uma prova", description = "Verifica o cadastro salvo de uma prova e deleta o registro")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Prova deletada com sucesso!")
+    })
     public ResponseEntity<Void> deletarProva(@PathVariable int id) {
         try {
 

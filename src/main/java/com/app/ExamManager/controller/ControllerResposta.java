@@ -19,6 +19,10 @@ import com.app.ExamManager.model.Resposta;
 import com.app.ExamManager.service.ServiceQuestao;
 import com.app.ExamManager.service.ServiceResposta;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/respostas")
 public class ControllerResposta {
@@ -29,7 +33,11 @@ public class ControllerResposta {
     @Autowired
     private ServiceQuestao serviceQuestao;
 
-    @PostMapping("/cadastro")
+    @PostMapping("/cadastro/{questaoId}")
+    @Operation(summary = "Cria uma nova resposta", description = "Adiciona uma nova resposta para uma questão existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Resposta criada com sucesso!"),
+    })
     public ResponseEntity<Resposta> criarResposta(@RequestParam int questaoId, @RequestParam String descricao) {
 
         if (descricao == null || descricao.trim().isEmpty()) {
@@ -50,6 +58,10 @@ public class ControllerResposta {
     }
 
     @GetMapping("/buscar")
+    @Operation(summary = "Listar todas respostas", description = "Retorna todas as respostas cadastradas")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Respostas encontradas com sucesso!")
+    })
     public ResponseEntity<List<Resposta>> listarRespostas(){
 
         List<Resposta> respostas = serviceResposta.buscarTodasRespostas();
@@ -62,6 +74,10 @@ public class ControllerResposta {
     }
 
     @GetMapping("/buscar/{id}")
+    @Operation(summary = "Busca resposta pelo identificador", description = "Retorna resposta correspondente ao identificador parametrizado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Resposta encontrada com sucesso!")
+    })
     public ResponseEntity<Resposta> buscarRespostaPorId(@PathVariable int id){
 
         try {
@@ -76,6 +92,10 @@ public class ControllerResposta {
     }
 
     @PutMapping("/atualizar/{id}")
+    @Operation(summary = "Atualiza resposta cadastrada", description = "Altera o registro de uma resposta")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Resposta atualizada com sucesso!")
+    })
     public ResponseEntity<Resposta> atualizarResposta(@PathVariable int id, @RequestParam String descricao){
         
         try {
@@ -102,6 +122,10 @@ public class ControllerResposta {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Deleta uma resposta", description = "Verifica o cadastro salvo de uma resposta e deleta o registro")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Resposta deletada com sucesso!")
+    })
     public ResponseEntity<Void> deletarResposta(@PathVariable int id) {
 
         try {
