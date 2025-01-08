@@ -1,7 +1,7 @@
 package com.app.ExamManager.controller;
 
 import java.util.List;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,16 +33,23 @@ public class ControllerProva {
     @Operation(summary = "Cria uma nova prova", description = "Adiciona uma nova prova com o nome fornecido")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Prova criada com sucesso!"),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "422", description = "Erro ao criar prova, nome inválido!")
     })
-    public ResponseEntity<Prova> criarProva(@RequestParam String nome){
+    public ResponseEntity<Prova> criarProva(@RequestParam String nome, @RequestParam String descricao){
 
-        Prova prova = new Prova();
-        prova.setNome(nome);
-        prova.setDataCriacao(LocalDateTime.now());
+        if (nome == null || nome.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(null);
+        }
 
         try {
-            prova = serviceProva.salvarProva(prova);
+            Prova prova = new Prova();
+            prova.setNome(nome);
+            prova.setDescricao(descricao);
+            prova.setDataCriacao(LocalDate.now());
+
+            serviceProva.salvarProva(prova);
 
             return new ResponseEntity<>(prova, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -93,24 +100,30 @@ public class ControllerProva {
     @PutMapping("/atualizar/{id}")
     @Operation(summary = "Atualiza informações de uma prova", description = "Identifica alterações em um objeto prova cadastrado e atualiza o registro")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Prova atualizada com sucesso!")
+        @ApiResponse(responseCode = "200", description = "Prova atualizada com sucesso!"),
+        @ApiResponse(responseCode = "400", description = "Erro. Registro de prova não alterado! Parâmetros inválidos."),
+        @ApiResponse(responseCode = "404", description = "Erro. Id incorreto ou inexistente, prova não encontrada!")
     })
-    public ResponseEntity<Prova> atualizarProva(@PathVariable int id, @RequestParam String nome) {
+    public ResponseEntity<Prova> atualizarProva(@PathVariable int id, 
+                                            @RequestParam String nome, 
+                                            @RequestParam String descricao) {
 
+        if (nome == null || descricao == null || nome.isEmpty() || descricao.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
-            
             Prova prova = serviceProva.buscarProvaPorId(id);
 
-            if (!prova.getNome().equals(nome)) {
+            if (prova != null && (!prova.getNome().equals(nome) || !prova.getDescricao().equals(descricao))) {
                 prova.setNome(nome);
+                prova.setDescricao(descricao);
 
                 serviceProva.atualizarProva(prova);
+                return new ResponseEntity<>(prova, HttpStatus.OK);
             }
 
-            return new ResponseEntity<>(prova, HttpStatus.OK);
-
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (IllegalArgumentException e) {
-            
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

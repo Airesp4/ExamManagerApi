@@ -38,7 +38,7 @@ public class ControllerResposta {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Resposta criada com sucesso!"),
     })
-    public ResponseEntity<Resposta> criarResposta(@RequestParam int questaoId, @RequestParam String descricao) {
+    public ResponseEntity<Resposta> criarResposta(@PathVariable int questaoId, @RequestParam String descricao) {
 
         if (descricao == null || descricao.trim().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

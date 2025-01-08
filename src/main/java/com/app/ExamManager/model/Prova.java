@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity
@@ -22,8 +22,11 @@ public class Prova {
     @Column(name = "nome", nullable = false, length = 255, unique = true)
     private String nome;
 
+    @Column(name = "descricao", nullable = true, length = 255)
+    private String descricao;
+
     @Column(name = "data_criacao", nullable = false)
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     public int getId() {
         return id;
@@ -41,11 +44,19 @@ public class Prova {
         this.nome = nome;
     }
 
-    public LocalDateTime getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }
