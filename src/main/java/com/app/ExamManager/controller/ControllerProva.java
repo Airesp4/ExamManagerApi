@@ -61,7 +61,8 @@ public class ControllerProva {
     @GetMapping("/buscar")
     @Operation(summary = "Listar todas provas", description = "Retorna todas as provas cadastradas")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Provas encontradas com sucesso!")
+        @ApiResponse(responseCode = "200", description = "Provas encontradas com sucesso!"),
+        @ApiResponse(responseCode = "204", description = "Provas não encontradas.")
     })
     public ResponseEntity<List<Prova>> listarProvas() {
 
@@ -80,7 +81,8 @@ public class ControllerProva {
     @GetMapping("/buscar/{id}")
     @Operation(summary = "Busca prova pelo identificador", description = "Retorna prova correspondente ao identificador parametrizado")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!")
+        @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!"),
+        @ApiResponse(responseCode = "404", description = "Prova não encontrada.")
     })
     public ResponseEntity<Prova> buscarProvaPorId(@PathVariable int id) {
 
