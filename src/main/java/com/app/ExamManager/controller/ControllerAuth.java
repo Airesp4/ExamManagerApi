@@ -1,52 +1,81 @@
 package com.app.ExamManager.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.ExamManager.DTO.AuthenticationDTO;
+import com.app.ExamManager.DTO.LoginResponseDTO;
+import com.app.ExamManager.DTO.RegisterDTO;
 import com.app.ExamManager.model.Usuario;
-import com.app.ExamManager.service.ServiceUsuario;
+import com.app.ExamManager.repository.RepositoryUsuario;
+import com.app.ExamManager.service.ServiceToken;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/auth")
 public class ControllerAuth {
 
     @Autowired
-    private ServiceUsuario serviceUsuario;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RepositoryUsuario repositoryUsuario;
+
+    @Autowired
+    private ServiceToken serviceToken;
 
     @PostMapping("/login")
-    @Operation(summary = "Realiza login do usuário", description = "Valida as credenciais do usuário e retorna o token JWT")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Login bem-sucedido"),
-        @ApiResponse(responseCode = "400", description = "Dados obrigatórios ausentes"),
-        @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
-    })
-    public ResponseEntity<String> login(@RequestBody Usuario usuario) {
-        // Validação básica para verificar se os campos obrigatórios estão preenchidos
-        if (usuario.getUsername() == null || usuario.getUsername().isEmpty() ||
-            usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário e senha são obrigatórios");
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
+
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = serviceToken.generateToken((Usuario) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
+
+        if (this.repositoryUsuario.findByUsername(data.login()) != null) 
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já existe");
+        
+        if (data.dateBirth() == null || data.dateBirth().isEmpty()) {
+            return ResponseEntity.badRequest().body("Data de nascimento não pode ser vazia");
         }
 
         try {
-            // Autentica o usuário e gera o token
-            String token = serviceUsuario.autenticarUsuario(usuario.getUsername(), usuario.getPassword());
+            // Validação e conversão da data de nascimento
+            LocalDate dateBirth = LocalDate.parse(data.dateBirth());
 
-            return ResponseEntity.ok(token);
-        } catch (UsernameNotFoundException | BadCredentialsException e) {
-            
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+            if (dateBirth.isAfter(LocalDate.now())) {
+                return ResponseEntity.badRequest().body("Data de nascimento não pode ser futura");
+            }
+
+            // Criptografia da senha
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+
+            // Criação do novo usuário
+            Usuario newUser = new Usuario(data.login(), encryptedPassword, dateBirth, data.role());
+            this.repositoryUsuario.save(newUser);
+
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
 }
-
