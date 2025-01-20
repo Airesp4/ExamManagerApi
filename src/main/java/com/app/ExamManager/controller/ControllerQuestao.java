@@ -32,7 +32,7 @@ public class ControllerQuestao {
     @Autowired
     private ServiceProva serviceProva;
 
-    @PostMapping("/cadastro/{provaId}")
+    @PostMapping("/{provaId}")
     @Operation(summary = "Cria uma nova questão", description = "Adiciona uma nova questão com o enunciado fornecido e atribui a mesma à uma prova existente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Questão criada com sucesso!"),
@@ -60,7 +60,7 @@ public class ControllerQuestao {
         return new ResponseEntity<>(questao, HttpStatus.CREATED);   
     }
 
-    @GetMapping("/buscar")
+    @GetMapping
     @Operation(summary = "Listar todas questões", description = "Retorna todas as questões cadastradas")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Questões encontradas com sucesso!")
@@ -76,7 +76,7 @@ public class ControllerQuestao {
         return new ResponseEntity<>(questoes, HttpStatus.OK);
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Busca questão pelo identificador", description = "Retorna questão correspondente ao identificador parametrizado")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Questão encontrada com sucesso!")
@@ -94,7 +94,7 @@ public class ControllerQuestao {
         }
     }
 
-    @PutMapping("/atualizar/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Atualiza informações de uma questão", description = "Identifica alterações em um objeto questão cadastrado e atualiza o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Questão atualizada com sucesso!")
@@ -120,7 +120,7 @@ public class ControllerQuestao {
         }
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deleta uma questão", description = "Verifica o cadastro salvo de uma questão e deleta o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Questão deletada com sucesso!")

@@ -33,7 +33,7 @@ public class ControllerResposta {
     @Autowired
     private ServiceQuestao serviceQuestao;
 
-    @PostMapping("/cadastro/{questaoId}")
+    @PostMapping("/{questaoId}")
     @Operation(summary = "Cria uma nova resposta", description = "Adiciona uma nova resposta para uma questão existente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Resposta criada com sucesso!"),
@@ -57,7 +57,7 @@ public class ControllerResposta {
         return new ResponseEntity<>(resposta, HttpStatus.CREATED);
     }
 
-    @GetMapping("/buscar")
+    @GetMapping
     @Operation(summary = "Listar todas respostas", description = "Retorna todas as respostas cadastradas")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Respostas encontradas com sucesso!")
@@ -73,7 +73,7 @@ public class ControllerResposta {
         return new ResponseEntity<>(respostas, HttpStatus.OK);
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Busca resposta pelo identificador", description = "Retorna resposta correspondente ao identificador parametrizado")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Resposta encontrada com sucesso!")
@@ -91,7 +91,7 @@ public class ControllerResposta {
         }
     }
 
-    @PutMapping("/atualizar/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Atualiza resposta cadastrada", description = "Altera o registro de uma resposta")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Resposta atualizada com sucesso!")
@@ -121,7 +121,7 @@ public class ControllerResposta {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deleta uma resposta", description = "Verifica o cadastro salvo de uma resposta e deleta o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Resposta deletada com sucesso!")

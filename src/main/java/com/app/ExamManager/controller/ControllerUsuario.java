@@ -25,7 +25,7 @@ public class ControllerUsuario {
     @Autowired
     private ServiceUsuario serviceUsuario;
 
-    @GetMapping("/buscar")
+    @GetMapping
     @Operation(summary = "Listar todos usuarios", description = "Retorna todos os usuários cadastrados")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuários encontradas com sucesso!"),
@@ -41,7 +41,7 @@ public class ControllerUsuario {
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Busca usuário pelo identificador", description = "Retorna usuário correspondente ao identificador parametrizado")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!"),
@@ -59,7 +59,7 @@ public class ControllerUsuario {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um usuário", description = "Verifica o cadastro salvo de um usuário e deleta o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso!"),

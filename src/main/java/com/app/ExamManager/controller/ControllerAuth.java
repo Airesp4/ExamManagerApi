@@ -59,17 +59,14 @@ public class ControllerAuth {
         }
 
         try {
-            // Validação e conversão da data de nascimento
             LocalDate dateBirth = LocalDate.parse(data.dateBirth());
 
             if (dateBirth.isAfter(LocalDate.now())) {
                 return ResponseEntity.badRequest().body("Data de nascimento não pode ser futura");
             }
 
-            // Criptografia da senha
             String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 
-            // Criação do novo usuário
             Usuario newUser = new Usuario(data.login(), encryptedPassword, dateBirth, data.role());
             this.repositoryUsuario.save(newUser);
 

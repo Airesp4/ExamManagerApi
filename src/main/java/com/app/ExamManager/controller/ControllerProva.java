@@ -29,7 +29,7 @@ public class ControllerProva {
     @Autowired
     private ServiceProva serviceProva;
 
-    @PostMapping("/cadastro")
+    @PostMapping
     @Operation(summary = "Cria uma nova prova", description = "Adiciona uma nova prova com o nome fornecido")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Prova criada com sucesso!"),
@@ -58,7 +58,7 @@ public class ControllerProva {
         }
     }
 
-    @GetMapping("/buscar")
+    @GetMapping
     @Operation(summary = "Listar todas provas", description = "Retorna todas as provas cadastradas")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Provas encontradas com sucesso!"),
@@ -78,7 +78,7 @@ public class ControllerProva {
         }
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Busca prova pelo identificador", description = "Retorna prova correspondente ao identificador parametrizado")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!"),
@@ -99,7 +99,7 @@ public class ControllerProva {
 
     }
 
-    @PutMapping("/atualizar/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Atualiza informações de uma prova", description = "Identifica alterações em um objeto prova cadastrado e atualiza o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Prova atualizada com sucesso!"),
@@ -130,7 +130,7 @@ public class ControllerProva {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deleta uma prova", description = "Verifica o cadastro salvo de uma prova e deleta o registro")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Prova deletada com sucesso!")

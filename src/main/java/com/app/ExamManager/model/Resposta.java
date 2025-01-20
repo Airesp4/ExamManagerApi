@@ -1,6 +1,10 @@
 package com.app.ExamManager.model;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +27,7 @@ public class Resposta {
 
     @ManyToOne
     @JoinColumn(name = "questao_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Questao questao;
 
     public int getId() {
