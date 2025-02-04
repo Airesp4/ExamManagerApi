@@ -4,7 +4,7 @@
 
 O backend da aplicação **Exam Manager** é uma API RESTful desenvolvida com **Spring Boot**. Ela fornece recursos para gerenciar exames, provas, questões e usuários. A API se comunica com o banco de dados e oferece endpoints para manipulação dos dados de maneira simples e eficiente.
 
-## Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
 - **Spring Boot**
 - **Spring Data JPA** (para acesso ao banco de dados)
@@ -15,7 +15,7 @@ O backend da aplicação **Exam Manager** é uma API RESTful desenvolvida com **
 - **Lombok** (para reduzir a verbosidade do código com anotações como `@Getter`, `@Setter`, etc.)
 - **Springdoc OpenAPI** (para documentação da API e integração com Swagger)
 
-## Funcionalidades
+## 🎯 Funcionalidades
 
 - **Cadastro de Provas**: Criar, listar, atualizar e excluir provas.
 - **Gestão de Questões**: Criar, listar, atualizar e excluir questões associadas às provas.
