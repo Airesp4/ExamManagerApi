@@ -1,4 +1,4 @@
-# Exam Manager - Backend
+# ExamManager - Backend
 
 ## Descrição
 
