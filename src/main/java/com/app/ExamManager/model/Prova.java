@@ -15,6 +15,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import com.app.ExamManager.DTO.ProvaDTO;
+
 
 @Entity
 @Table(name = "provas")
@@ -38,4 +40,9 @@ public class Prova {
     @Column(name = "data_criacao", nullable = false)
     private LocalDate dataCriacao;
 
+    public Prova(ProvaDTO dto) {
+        this.nome = dto.nome();
+        this.descricao = dto.descricao();
+        this.dataCriacao = dto.dataCriacao();
+    }
 }

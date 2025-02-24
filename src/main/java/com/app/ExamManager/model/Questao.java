@@ -4,6 +4,8 @@ package com.app.ExamManager.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.app.ExamManager.DTO.DescricaoDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,4 +42,8 @@ public class Questao {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Prova prova;
 
+    public Questao(DescricaoDTO dto, Prova prova){
+        this.enunciado = dto.texto();
+        this.prova = prova;
+    }
 }

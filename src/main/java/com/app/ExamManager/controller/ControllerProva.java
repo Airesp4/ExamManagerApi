@@ -1,7 +1,6 @@
 package com.app.ExamManager.controller;
 
 import java.util.List;
-import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,19 +10,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.ExamManager.DTO.ProvaDTO;
 import com.app.ExamManager.model.Prova;
 import com.app.ExamManager.service.ServiceProva;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/provas")
+@RequestMapping("/prova")
 public class ControllerProva {
     
     @Autowired
@@ -34,26 +35,20 @@ public class ControllerProva {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Prova criada com sucesso!"),
         @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-        @ApiResponse(responseCode = "422", description = "Erro ao criar prova, nome inválido!")
+        @ApiResponse(responseCode = "422", description = "Erro ao criar prova, nome vazio!")
     })
-    public ResponseEntity<Prova> criarProva(@RequestParam String nome, @RequestParam String descricao){
+    public ResponseEntity<Void> criarProva(@RequestBody @Valid ProvaDTO provaDTO) {
 
-        if (nome == null || nome.trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body(null);
+        if (provaDTO.nome().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
-
+        
         try {
-            Prova prova = new Prova();
-            prova.setNome(nome);
-            prova.setDescricao(descricao);
-            prova.setDataCriacao(LocalDate.now());
-
+            Prova prova = new Prova(provaDTO);
             serviceProva.salvarProva(prova);
 
-            return new ResponseEntity<>(prova, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
-            
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -106,27 +101,22 @@ public class ControllerProva {
         @ApiResponse(responseCode = "400", description = "Erro. Registro de prova não alterado! Parâmetros inválidos."),
         @ApiResponse(responseCode = "404", description = "Erro. Id incorreto ou inexistente, prova não encontrada!")
     })
-    public ResponseEntity<Prova> atualizarProva(@PathVariable int id, 
-                                            @RequestParam String nome, 
-                                            @RequestParam String descricao) {
+    public ResponseEntity<Prova> atualizarProva(@PathVariable int id, @RequestBody @Valid ProvaDTO provaDTO) {
 
-        if (nome == null || descricao == null || nome.isEmpty() || descricao.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         try {
             Prova prova = serviceProva.buscarProvaPorId(id);
 
-            if (prova != null && (!prova.getNome().equals(nome) || !prova.getDescricao().equals(descricao))) {
-                prova.setNome(nome);
-                prova.setDescricao(descricao);
+            if (prova != null && (!prova.getNome().equals(provaDTO.nome()) || !prova.getDescricao().equals(provaDTO.descricao()))) {
+                prova.setNome(provaDTO.nome());
+                prova.setDescricao(provaDTO.descricao());
 
                 serviceProva.atualizarProva(prova);
                 return new ResponseEntity<>(prova, HttpStatus.OK);
             }
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
