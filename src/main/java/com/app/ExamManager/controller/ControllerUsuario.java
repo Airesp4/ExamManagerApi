@@ -44,7 +44,7 @@ public class ControllerUsuario {
     @GetMapping("/{id}")
     @Operation(summary = "Busca usuário pelo identificador", description = "Retorna usuário correspondente ao identificador parametrizado")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Prova encontrada com sucesso!"),
+        @ApiResponse(responseCode = "200", description = "Usuário encontrada com sucesso!"),
         @ApiResponse(responseCode = "404", description = "Usuário não encontrado.")
     })
     public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable int id){
@@ -65,7 +65,7 @@ public class ControllerUsuario {
         @ApiResponse(responseCode = "200", description = "Usuário deletado com sucesso!"),
         @ApiResponse(responseCode = "404", description = "Usuário não encontrado, erro ao deletar!")
     })
-    public ResponseEntity<Void> deletarProva(@PathVariable int id) {
+    public ResponseEntity<Void> deletarUsuario(@PathVariable int id) {
         try {
 
             serviceUsuario.deletarUsuario(id);
