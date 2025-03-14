@@ -34,7 +34,7 @@ public class Questao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "enunciado", nullable = false, length = 500)
+    @Column(name = "enunciado", nullable = false, columnDefinition = "TEXT")
     private String enunciado;
 
     @ManyToOne
