@@ -1,15 +1,17 @@
-FROM openjdk:17-jdk-slim AS build
-COPY pom.xml mvnw ./
-COPY .mvn .mvn
+FROM maven:3.8.4-jdk-8 AS build
 
-RUN chmod +x ./mvnw
+COPY src /app/src
+COPY pom.xml /app
 
-RUN ./mvnw dependency:resolve
+WORKDIR /app
+RUN mvn clean install
 
-COPY src src
+FROM openjdk:8-jre-alpine
 
-RUN ./mvnw package
-FROM openjdk:17-jdk-slim
-WORKDIR demo
-COPY --from=build target/*.jar demo.jar
-ENTRYPOINT ["java", "-jar", "demo.jar"]
+COPY --from=build /app/target/ExamManager-0.0.1-SNAPSHOT.jar /app/app.jar
+
+WORKDIR /app
+
+EXPOSE 8080
+
+CMD [ "java", "-jar", "app.jar" ]
